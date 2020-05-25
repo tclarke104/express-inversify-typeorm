@@ -6,7 +6,7 @@
    "password": "test",
    "database": "test",
    "synchronize": true,
-   "migrationsrun": true,
+   "migrationsRun": true,
    "logging": false,
    "entities": [
       "build/entity/*.js"

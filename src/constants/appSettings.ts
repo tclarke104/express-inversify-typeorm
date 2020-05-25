@@ -1,4 +1,5 @@
 export const AppSettings = {
     secret: 'supersecret',
-    port: 8000
+    port: 8000,
+    
 }
