@@ -4,17 +4,20 @@ import { UserViewModel } from '../interfaces/UserViewModel';
 import { Role } from '../entity/Role.entity';
 import { ROLES } from '../constants/roles';
 import { userInfo } from 'os';
+import { NewUserRequest } from '../interfaces/NewUserRequest';
 
 @injectable()
 export class UserFactory {
 
-    buildUser(firstName: string, lastName: string, email: string, age: number, password: string, salt: string, roles: Role[]) {
+    buildUser(userRequest: NewUserRequest, hash: string, salt: string, roles: Role[]) {
+        let { firstName, lastName, age, email } = userRequest;
+
         let user = new User();
         user.firstName = firstName;
         user.lastName = lastName;
         user.age = age;
         user.email = email;
-        user.password = password;
+        user.password = hash;
         user.salt = salt;
         user.roles = roles;
         return user;

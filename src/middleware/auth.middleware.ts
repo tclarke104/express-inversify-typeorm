@@ -12,7 +12,7 @@ import { AppSettings} from '../constants/appSettings';
 export class AuthMiddleware extends BaseMiddleware {
     constructor(@inject(TYPES.DatabaseService) private db: DatabaseService) { super()}
     
-    public async handler(req: CutsomRequest,
+    public async handler(req: CutsomRequest<any>,
         res: Response,
         next: NextFunction) {
         try{

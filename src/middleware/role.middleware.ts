@@ -7,7 +7,7 @@ import { CutsomRequest } from "../interfaces/Request";
 import { ROLES } from "../constants/roles";
 import { BaseMiddleware } from "inversify-express-utils";
 
-const checkRole = (req: CutsomRequest, role: ROLES):boolean => req.user.roles.findIndex(r => r.name === ROLES.admin) != -1;
+const checkRole = (req: CutsomRequest<any>, role: ROLES):boolean => req.user.roles.findIndex(r => r.name === ROLES.admin) != -1;
  
 
 @injectable()
@@ -19,7 +19,7 @@ export class AdminMiddleware extends BaseMiddleware {
         super();
     }
 
-    handler(req: CutsomRequest, res: Response, next: NextFunction) {
+    handler(req: CutsomRequest<any>, res: Response, next: NextFunction) {
         if (!checkRole(req, ROLES.admin)) {
             throw new Error('User does not have sufficient role permissions');
         }

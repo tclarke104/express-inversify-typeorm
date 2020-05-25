@@ -10,6 +10,7 @@ import crypto from "crypto";
 import { UserViewModel } from "../interfaces/UserViewModel";
 import { Role } from "../entity/Role.entity";
 import { ROLES } from "../constants/roles";
+import { NewUserRequest } from "../interfaces/NewUserRequest";
 
 @injectable()
 export class UserService {
@@ -25,31 +26,41 @@ export class UserService {
             this.roleRepository = this.db.getRepository<Role>(Role);
     }
 
-    async signUp(user): Promise<User> {
+    async signUp(user: NewUserRequest): Promise<UserViewModel> {
+        // generate password hash and salt
         let {hash, salt} = this.generateHash(user.password);
-        let roles = await this.roleRepository.find({id: In(user.roles)})
-        let dbUser = this.userFactory.buildUser(user.firstName, user.lastName, user.email, user.age, hash, salt, roles);
+
+        // find associated roles
+        let roles = await this.roleRepository.find({id: In(user.roles)});
+
+        // build and save new user and send to front
+        let dbUser = this.userFactory.buildUser(user, hash, salt, roles);
         let savedUser = await this.userRepository.save(dbUser);
-        return savedUser;
+        return this.userFactory.buildUserViewModel(savedUser);
     }
 
-    async signIn(email: string, newPassword: string) {
+    async signIn(email: string, newPassword: string): Promise<{token: string}> {
+        // find user in db
         let {id, password, salt} = await this.userRepository.findOneOrFail({email});
+        
+        // check if hash matches the db record
         let {hash} = this.generateHash(newPassword, salt);
-
         if(hash != password) { throw new Error("Invalid Password") };
 
+        // generate and send token
         const token = this.generateToken(id);
 
         return {token}
     }
 
     async getUsers(): Promise<UserViewModel[]> {
+        // find user and map to user viewmodel
         let users = await this.userRepository.find();
         return users.map(this.userFactory.buildUserViewModel)
     }
 
     async saveRole(name: ROLES, description: string): Promise<Role> {
+        // generate new role and save to db
         let role = this.userFactory.buildRole(name, description);
         let savedRole = await this.roleRepository.save(role);
         return savedRole

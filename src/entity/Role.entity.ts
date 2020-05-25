@@ -1,5 +1,6 @@
 import {Entity, PrimaryGeneratedColumn, Column, ManyToMany} from "typeorm";
 import { User } from "./User.entity";
+import { ROLES } from "../constants/roles";
 
 @Entity()
 export class Role {
@@ -8,7 +9,7 @@ export class Role {
     id: number;
 
     @Column()
-    name: string;
+    name: ROLES;
 
     @Column({nullable: true})
     description: string;
