@@ -37,7 +37,7 @@
     "@types/lodash": "^4.14.149",
     "@types/mongodb": "^3.3.11",
     "@types/node": "^8.0.29",
-    "bcrypt": "^4.0.1",
+    "bcrypt": "^5.0.0",
     "ts-node": "3.3.0",
     "typescript": "3.3.3333"
   }
